@@ -109,4 +109,61 @@ namespace EFCoreSingleFileDemo
             Console.ReadLine();
         }
     }
-}*/
+}
+------------------------------------------------------------------------
+ADO.NET
+    static string connectionString = "Server=localhost, 1433;Database=velan_dbconnection;User Id=sa;Password=MyPassword@123;TrustServerCertificate=True;";
+    public static void Add_Student()
+    {
+        Console.Write("Enter the Student ID : ");
+        int Std_ID = Convert.ToInt32(Console.ReadLine());
+        foreach (Student std in Program.Students_List)
+        {
+            if (std.Std_Id == Std_ID)
+            {
+                Console.WriteLine("This Student ID is already exist , Please enter another one : ");
+                return;
+            }
+        }
+
+        Console.Write("Enter the Student Name : ");
+        String Std_Name = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(Std_Name))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                return;
+            }
+        
+        Console.Write("Enter the Age of the student : ");
+        int Std_age = Convert.ToInt32(Console.ReadLine());
+        if(Std_age<0 || Std_age > 100)
+        {
+            Console.WriteLine("Enter the Vaild Age !!");
+            return;
+        }
+
+        Console.Write("Enter the Email Of the Student : ");
+        String Std_Mail = Console.ReadLine();
+        if (String.IsNullOrWhiteSpace(Std_Mail))
+        {
+            Console.WriteLine("Email cannot be empty.");
+            return;
+        }
+
+        Program.Students_List.Add(new Student(Std_ID , Std_Name , Std_age , Std_Mail));
+        using  (SqlConnection connection = new SqlConnection(Actions.connectionString))
+        {
+            
+            string query = "INSERT INTO [std_course].[student] VALUES (@Std_Id, @Std_Name, @Std_age, @Std_Email)";
+            SqlCommand cmd = new SqlCommand(query, connection);
+
+            cmd.Parameters.AddWithValue("@Std_Id", Std_ID);
+            cmd.Parameters.AddWithValue("@Std_Name", Std_Name);
+            cmd.Parameters.AddWithValue("@Std_age", Std_age);
+            cmd.Parameters.AddWithValue("@Std_Email", Std_Mail);
+
+            connection.Open();
+            cmd.ExecuteNonQuery();
+
+        }
+    }*/

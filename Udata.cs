@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 
 public class Student
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Std_Id { get; set; }
     public string Std_Name { get; set; } = string.Empty;
     public int Std_age { get; set; }
@@ -38,8 +40,28 @@ public class Course
     }
 }
 
-/*
+public class Enrollment
+{
+    public int Std_Id { get; set; }
+    public int Course_Id { get; set; }
+}
 
-"Server=localhost, 1433;Database=velan_dbconnection;User Id=sa;Password=MyPassword@123;TrustServerCertificate=True;"
+public class SchoolContext : DbContext
+{
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<Enrollment> Enrollments { get; set; }
 
-*/
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+        options.UseSqlServer("Server=localhost, 1433;Database=velan_dbconnection;User Id=sa;Password=MyPassword@123;TrustServerCertificate=True;");
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Student>().ToTable("student", "std_course");
+        modelBuilder.Entity<Course>().ToTable("course", "std_course");
+        modelBuilder.Entity<Enrollment>().ToTable("enrollment", "std_course");
+        modelBuilder.Entity<Enrollment>().HasKey(e => new { e.Std_Id, e.Course_Id });
+    }
+}

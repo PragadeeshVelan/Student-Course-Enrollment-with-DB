@@ -5,16 +5,14 @@ using Microsoft.Data.SqlClient;
 
 class Program
 {
-    public static List<Student> Students_List = new List<Student>();
-    public static List<Course> Courses_List = new List<Course>();
-    public static Dictionary<int , List<int>> std_course = new Dictionary<int, List<int>>();
+    // public static List<Student> Students_List = new List<Student>();
+    // public static List<Course> Courses_List = new List<Course>();
+    // public static Dictionary<int , List<int>> std_course = new Dictionary<int, List<int>>();
     public static void Main(String[] args)
     {
+        int n;
         while (true)
         {
-            
-            
-
             Console.WriteLine("\nStudent Course Enrollment System");
             Console.WriteLine("1. Add Student");
             Console.WriteLine("2. View Students");
@@ -26,8 +24,14 @@ class Program
             Console.WriteLine("8. Exit");
             Console.WriteLine("-----------------------------------------------");
             Console.Write("Choose The Option And Enter the Key From 1 - 7 : ");
-            int action = Convert.ToInt32(Console.ReadLine());
-            switch (action)
+            string? action =Console.ReadLine();
+            if(!int.TryParse(action, out n))
+            {
+                Console.WriteLine("enter the valid input !");
+                continue;
+            }
+            int decision = Convert.ToInt32(action);
+            switch (decision)
             {
                 case 1:
                     Actions.Add_Student();
